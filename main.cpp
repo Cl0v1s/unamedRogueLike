@@ -1,13 +1,18 @@
-#include <SFML/Graphics.hpp>
+#include <stdlib.h>
 #include <iostream>
+#include <time.h>
+
+#include <SFML/Graphics.hpp>
 
 #include "Scene.h"
 
 
 int main()
 {
+	//initialisation du jeu
+	//initialisation de la fenetre
 	sf::RenderWindow window(sf::VideoMode(200, 200), "AcrossTheDungeon");
-
+	srand(time(0x00));
 	Scene* current_scene;
 	while (window.isOpen())
 	{
