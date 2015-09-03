@@ -13,7 +13,7 @@ int main()
 	//initialisation de la fenetre
 	sf::RenderWindow window(sf::VideoMode(200, 200), "AcrossTheDungeon");
 	srand(time(0x00));
-	Scene* current_scene;
+	Scene* current_scene = 0x00;
 	while (window.isOpen())
 	{
 		//gestion de la logique
