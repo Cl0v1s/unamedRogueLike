@@ -4,16 +4,17 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Const.h"
 #include "Scene.h"
-
+#include "SceneGame.h"
 
 int main()
 {
 	//initialisation du jeu
 	//initialisation de la fenetre
-	sf::RenderWindow window(sf::VideoMode(200, 200), "AcrossTheDungeon");
+	sf::RenderWindow window(sf::VideoMode(DEVICE_WIDTH, DEVICE_HEIGHT), "AcrossTheDungeon");
 	srand(time(0x00));
-	Scene* current_scene = 0x00;
+	Scene* current_scene = new SceneGame();
 	while (window.isOpen())
 	{
 		//gestion de la logique

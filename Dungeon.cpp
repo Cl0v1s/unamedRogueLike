@@ -25,21 +25,21 @@ void Dungeon::generateRooms()
 	for (unsigned char i = 0; i != roomsNumber; i++)
 	{
 		rooms.push_back(Room());
-		rooms[i]._width = rand() % ROOM_WIDTH_MAX + 5;
-		rooms[i]._height = rand() % ROOM_HEIGHT_MAX + 5;
-		rooms[i]._x = rand() % DUNGEON_WIDTH_MAX;
-		rooms[i]._y = rand() % DUNGEON_HEIGHT_MAX;
+		rooms[i]._width = rand() % (ROOM_WIDTH_MAX - 5) + 5;
+		rooms[i]._height = rand() % (ROOM_HEIGHT_MAX- 5) + 5;
+		rooms[i]._x = rand() % (_width - rooms[i]._width);
+		rooms[i]._y = rand() % (_height - rooms[i]._height);
 		rooms[i]._connected = false;
 		//test de collision avec l'une des salles précedentes
 		bool  error = false;
 		auto it = rooms.begin();
-		while (!error && it != rooms.end())
+		while (!error && it != rooms.end() && (it - rooms.begin()) != i)
 		{
 			if (rooms[i]._x + rooms[i]._width >= it->_x && rooms[i]._x <= it->_x + it->_width) //test de collision horizontal
 			{
 				if (rooms[i]._y + rooms[i]._height >= it->_y && rooms[i]._y <= it->_y + it->_height) //test de collision vertical
 				{
-					rooms.pop_back(); //supression de la dernière salle qui vient d'etre ajoutée si collision
+					//it = rooms.erase(rooms.begin()+i); //supression de la dernière salle qui vient d'etre ajoutée si collision
 					error = true;
 				}
 			}
@@ -48,9 +48,30 @@ void Dungeon::generateRooms()
 		//si le test a réussi, application de la salle à la map
 		if (error == false)
 		{
-			for (unsigned int u = rooms[i]._x; u != rooms[i]._x + rooms[i]._width; u++)
+			unsigned int x, y;
+			for (unsigned int u = 0; u != rooms[i]._width - 1; u++)
 			{
-				for (unsigned int o = rooms[i]._y; o != rooms[i]._y + rooms[i]._height; o++)
+				for (unsigned int o = 0; o != rooms[i]._height - 1; o++)
+				{
+					std::cout << rooms[i]._height << std::endl;
+					x = u + rooms[i]._x;
+					y = o + rooms[i]._y;
+					//placement du sol
+					_map[x][y] = 0x01;
+					//placement des murs
+					_map[rooms[i]._x][y] = 0x02;
+					_map[rooms[i]._x + rooms[i]._width - 1][y] = 0x02;
+					_map[x][rooms[i]._y] = 0x02;
+					_map[x][rooms[i]._y + rooms[i]._height - 1] = 0x02;
+
+
+				}
+			}
+
+			/*
+			for (unsigned int u = rooms[i]._x; u != rooms[i]._x + rooms[i]._width - 1; u++)
+			{
+				for (unsigned int o = rooms[i]._y; o != rooms[i]._y + rooms[i]._height - 1; o++)
 				{
 					_map[u][o] = 0x01;
 					//application des murs (on ne fait pas de test qui seraient plus couteux qu'utiles)
@@ -59,7 +80,7 @@ void Dungeon::generateRooms()
 					_map[u][rooms[i]._y] = 0x02;
 					_map[u][rooms[i]._y + rooms[i]._height - 1] = 0x02;
 				}
-			}
+			}**/
 		}
 	}
 	//passage à la génération des couloirs
@@ -89,8 +110,12 @@ void Dungeon::generatePassages(std::vector<Room> &rooms)
 		i++;
 	}
 	if (done == false)
+	{
+		std::cout << "Dungeon non connexe, retry" << std::endl;
 		generatePassages(rooms);
-
+	}
+	else
+		std::cout << "Generation du donjon terminee" << std::endl;
 }
 
 void Dungeon::makePath(std::vector<Room> &rooms, Room &origin)
