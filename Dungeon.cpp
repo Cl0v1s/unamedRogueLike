@@ -133,7 +133,6 @@ void Dungeon::makePath(std::vector<Room> &rooms, Room &origin)
 		path.push_back(&rooms[index]);
 	}
 	//une fois que le chemin est déterminé, on trace le chemin dans la map
-	bool done = false;
 	index = 0;
 	Point start, end, current;
 	while ((index+1) < path.size())
@@ -185,7 +184,6 @@ void Dungeon::makePath(std::vector<Room> &rooms, Room &origin)
 void Dungeon::searchAnchorPoint(Room &room, Point &anchor)
 {
 	unsigned int side = rand() % 4;
-	unsigned int pos;
 	switch (side)
 	{
 	case 0:
