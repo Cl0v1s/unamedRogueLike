@@ -11,8 +11,8 @@ class SceneGame :
 	public Scene
 {
 private:
-	Dungeon* dungeon;
-	sf::Vector2<int> canvas;
+	Dungeon* _dungeon;
+	int _canvas[2];
 
 public:
 	SceneGame();

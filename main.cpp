@@ -15,6 +15,8 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(DEVICE_WIDTH, DEVICE_HEIGHT), "AcrossTheDungeon");
 	srand(time(0x00));
 	Scene* current_scene = new SceneGame();
+	//gestion du framerate
+	sf::Clock timer;
 	while (window.isOpen())
 	{
 		//gestion de la logique
@@ -24,14 +26,19 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		if (current_scene != 0x00)
-			current_scene->update();
+		//gestion du framerate
+		if (timer.getElapsedTime().asMilliseconds() >= 33)
+		{
+			timer.restart();
+			if (current_scene != 0x00)
+				current_scene->update();
 
-		//gestion de l'affichage
-		window.clear();
-		if (current_scene != 0x00)
-			current_scene->draw(&window);
-		window.display();
+			//gestion de l'affichage
+			window.clear();
+			if (current_scene != 0x00)
+				current_scene->draw(&window);
+			window.display();
+		}	
 	}
 
 	return 0;

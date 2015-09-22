@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 
+#include <SFML/Graphics.hpp>
+
 #include "Const.h"
 
 //définition des structures utiles à la génération
@@ -30,6 +32,7 @@ private:
 	char** _map;
 	unsigned int _width;
 	unsigned int _height;
+	sf::Texture* _tileset;
 public:
 	Dungeon();
 
@@ -63,6 +66,14 @@ public:
 	/// <param name="rooms">Graphe des salles</param>
 	/// <param name="origin">Salle de départ</param>
 	void dps(std::vector<Room> &rooms, Room &origin);
+
+	/// <summary>
+	/// Dessine la map
+	/// </summary>
+	/// <param name="render">Support de dessin</param>
+	/// <param name="x">position x du canvas</param>
+	/// <param name="y">position y du canvas</param>
+	void draw(sf::RenderWindow* render, const int x, const int y);
 
 
 	~Dungeon();

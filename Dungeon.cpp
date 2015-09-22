@@ -15,6 +15,13 @@ Dungeon::Dungeon()
 			_map[i][u] = 0x00; //normalisation de toutes les cases
 		}
 	}
+	//chargement du tileset
+	_tileset = new sf::Texture();
+	if (!_tileset->loadFromFile("Assets/Tileset.png"))
+	{
+		std::cout << "ERROR: FILE NOT FOUND" << std::endl;
+		exit(1);
+	}
 }
 
 void Dungeon::generateRooms()
@@ -212,6 +219,31 @@ void Dungeon::dps(std::vector<Room> &rooms, Room &origin)
 	{
 		if (rooms[origin._neibhours[i]]._connected == false)
 			dps(rooms, rooms[origin._neibhours[i]]);
+	}
+}
+
+void Dungeon::draw(sf::RenderWindow* render, const int x, const int y)
+{
+	sf::Sprite sprite;
+	sf::IntRect rect;
+	rect.top = 0;
+	rect.width = 32;
+	rect.height = 32;
+	sprite.setTexture(*_tileset);
+	for (int i = 0; i != DEVICE_WIDTH / 32; i++)
+	{
+		for (int u = 0; u != DEVICE_HEIGHT / 32; u++)
+		{
+			if ( i + x >= 0 && i + x < _width && u + y >= 0 && u + y < _height)
+				rect.left = (_map[i+x][u+y]-1) * 32;
+			if (rect.left >= 0)
+			{
+				sprite.setTextureRect(rect);
+				sprite.setPosition(i * 32, u * 32);
+				render->draw(sprite);
+			}
+			rect.left = -1;
+		}
 	}
 }
 
