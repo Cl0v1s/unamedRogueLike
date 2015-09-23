@@ -12,7 +12,7 @@ SceneGame::SceneGame()
 
 SceneGame::~SceneGame()
 {
-	if (_dungeon != 0x00)
+	if (_dungeon != CELL_EMPTY)
 		delete _dungeon;
 }
 

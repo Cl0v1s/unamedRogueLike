@@ -4,7 +4,7 @@
 /*
 	CONST.h
 	/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Vous trouverez ci-dessous une sucession de définition de constantes sous forme de Macro visant à faciliter la modification à postériori du code
+	Vous trouverez ci-dessous une sucession de dï¿½finition de constantes sous forme de Macro visant ï¿½ faciliter la modification ï¿½ postï¿½riori du code
 */
 
 //DEFINITION DE VARIABLES RELATIVES A L'AFFICHAGE
@@ -17,5 +17,10 @@
 #define DUNGEON_ROOM_MAX 25
 #define ROOM_WIDTH_MAX 20
 #define ROOM_HEIGHT_MAX 20
+
+//DEFINITION DES VALEURS DES CASES
+#define CELL_EMPTY 0x00
+#define CELL_FLOOR 0x01
+#define CELL_WALL 0x02
 
 #endif

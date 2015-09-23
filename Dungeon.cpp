@@ -12,7 +12,7 @@ Dungeon::Dungeon()
 		_map[i] = new char[_height];
 		for (unsigned char u = 0; u != _height; u++)
 		{
-			_map[i][u] = 0x00; //normalisation de toutes les cases
+			_map[i][u] = CELL_EMPTY; //normalisation de toutes les cases
 		}
 	}
 	//chargement du tileset
@@ -28,7 +28,7 @@ void Dungeon::generateRooms()
 {
 	std::vector<Room> rooms;
 	unsigned char roomsNumber = rand() % DUNGEON_ROOM_MAX + 5;
-	//génération "virtuelle" des salles
+	//gï¿½nï¿½ration "virtuelle" des salles
 	for (unsigned char i = 0; i != roomsNumber; i++)
 	{
 		rooms.push_back(Room());
@@ -37,7 +37,7 @@ void Dungeon::generateRooms()
 		rooms[i]._x = rand() % (_width - rooms[i]._width);
 		rooms[i]._y = rand() % (_height - rooms[i]._height);
 		rooms[i]._connected = false;
-		//test de collision avec l'une des salles précedentes
+		//test de collision avec l'une des salles prï¿½cedentes
 		bool  error = false;
 		auto it = rooms.begin();
 		while (!error && it != rooms.end() && (it - rooms.begin()) != i)
@@ -46,13 +46,13 @@ void Dungeon::generateRooms()
 			{
 				if (rooms[i]._y + rooms[i]._height >= it->_y && rooms[i]._y <= it->_y + it->_height) //test de collision vertical
 				{
-					//it = rooms.erase(rooms.begin()+i); //supression de la dernière salle qui vient d'etre ajoutée si collision
+					//it = rooms.erase(rooms.begin()+i); //supression de la derniï¿½re salle qui vient d'etre ajoutï¿½e si collision
 					error = true;
 				}
 			}
 			it++;
 		}
-		//si le test a réussi, application de la salle à la map
+		//si le test a rï¿½ussi, application de la salle ï¿½ la map
 		if (error == false)
 		{
 			unsigned int x, y;
@@ -64,12 +64,12 @@ void Dungeon::generateRooms()
 					x = u + rooms[i]._x;
 					y = o + rooms[i]._y;
 					//placement du sol
-					_map[x][y] = 0x01;
+					_map[x][y] = CELL_FLOOR;
 					//placement des murs
-					_map[rooms[i]._x][y] = 0x02;
-					_map[rooms[i]._x + rooms[i]._width - 1][y] = 0x02;
-					_map[x][rooms[i]._y] = 0x02;
-					_map[x][rooms[i]._y + rooms[i]._height - 1] = 0x02;
+					_map[rooms[i]._x][y] = CELL_WALL;
+					_map[rooms[i]._x + rooms[i]._width - 1][y] = CELL_WALL;
+					_map[x][rooms[i]._y] = CELL_WALL;
+					_map[x][rooms[i]._y + rooms[i]._height - 1] = CELL_WALL;
 
 
 				}
@@ -80,17 +80,17 @@ void Dungeon::generateRooms()
 			{
 				for (unsigned int o = rooms[i]._y; o != rooms[i]._y + rooms[i]._height - 1; o++)
 				{
-					_map[u][o] = 0x01;
+					_map[u][o] = CELL_FLOOR;
 					//application des murs (on ne fait pas de test qui seraient plus couteux qu'utiles)
-					_map[rooms[i]._x][o] = 0x02;
-					_map[rooms[i]._x + rooms[i]._width - 1][o] = 0x02;
-					_map[u][rooms[i]._y] = 0x02;
-					_map[u][rooms[i]._y + rooms[i]._height - 1] = 0x02;
+					_map[rooms[i]._x][o] = CELL_WALL;
+					_map[rooms[i]._x + rooms[i]._width - 1][o] = CELL_WALL;
+					_map[u][rooms[i]._y] = CELL_WALL;
+					_map[u][rooms[i]._y + rooms[i]._height - 1] = CELL_WALL;
 				}
 			}**/
 		}
 	}
-	//passage à la génération des couloirs
+	//passage ï¿½ la gï¿½nï¿½ration des couloirs
 	generatePassages(rooms);
 }
 
@@ -99,9 +99,9 @@ void Dungeon::generatePassages(std::vector<Room> &rooms)
 {
 	//on choisit une salle au hasard
 	unsigned int index = rand() % rooms.size();
-	//on génère un chemin à partir de cette salle 
+	//on gï¿½nï¿½re un chemin ï¿½ partir de cette salle
 	makePath(rooms, rooms[index]);
-	//on vérifie que toutes les salles sont connectés
+	//on vï¿½rifie que toutes les salles sont connectï¿½s
 	//passage a false de tout  les bools de cnx des salles
 	for (unsigned int i = 0; i != rooms.size(); i++)
 		rooms[i]._connected = false;
@@ -128,7 +128,7 @@ void Dungeon::generatePassages(std::vector<Room> &rooms)
 void Dungeon::makePath(std::vector<Room> &rooms, Room &origin)
 {
 	std::vector<Room*> path;
-	//on détermine la longueur du chemin
+	//on dï¿½termine la longueur du chemin
 	unsigned int pathLenght = rand() % (rooms.size() - 2) + 2;
 	//on ajoute le sommet d'origine au chemin
 	path.push_back(&origin);
@@ -139,7 +139,7 @@ void Dungeon::makePath(std::vector<Room> &rooms, Room &origin)
 		index = rand() % (rooms.size());
 		path.push_back(&rooms[index]);
 	}
-	//une fois que le chemin est déterminé, on trace le chemin dans la map
+	//une fois que le chemin est dï¿½terminï¿½, on trace le chemin dans la map
 	index = 0;
 	Point start, end, current;
 	while ((index+1) < path.size())
@@ -150,38 +150,38 @@ void Dungeon::makePath(std::vector<Room> &rooms, Room &origin)
 		//on recherche des points d'ancrage pour le chemin
 		searchAnchorPoint((*path[index]), start);
 		searchAnchorPoint((*path[index+1]), end);
-		//on place le point courant sur le point d'ancrage de départ
+		//on place le point courant sur le point d'ancrage de dï¿½part
 		current = start;
-		_map[current._x][current._y] = 0x01;
-		//tant qu'on a pas atteint la fin 
+		_map[current._x][current._y] = CELL_FLOOR;
+		//tant qu'on a pas atteint la fin
 		while (current._x != end._x && current._y != end._y)
 		{
 			if (current._x < end._x)
 			{
 				current._x += 1;
-				_map[current._x][current._y + 1] = 0x02;
-				_map[current._x][current._y - 1] = 0x02;
+				_map[current._x][current._y + 1] = CELL_WALL;
+				_map[current._x][current._y - 1] = CELL_WALL;
 			}
 			else if (current._x > end._x)
 			{
 				current._x -= 1;
-				_map[current._x][current._y + 1] = 0x02;
-				_map[current._x][current._y - 1] = 0x02;
+				_map[current._x][current._y + 1] = CELL_WALL;
+				_map[current._x][current._y - 1] = CELL_WALL;
 			}
 			else if (current._y < end._y)
 			{
 				current._y += 1;
-				_map[current._x+1][current._y] = 0x02;
-				_map[current._x-1][current._y] = 0x02;
+				_map[current._x+1][current._y] = CELL_WALL;
+				_map[current._x-1][current._y] = CELL_WALL;
 			}
 			else if (current._y > end._y)
 			{
 				current._y -= 1;
-				_map[current._x + 1][current._y] = 0x02;
-				_map[current._x - 1][current._y] = 0x02;
+				_map[current._x + 1][current._y] = CELL_WALL;
+				_map[current._x - 1][current._y] = CELL_WALL;
 			}
-			
-			_map[current._x][current._y] = 0x01;
+
+			_map[current._x][current._y] = CELL_FLOOR;
 		}
 		index += 1;
 	}
