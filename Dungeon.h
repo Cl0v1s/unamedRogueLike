@@ -17,7 +17,7 @@ struct Room
 	unsigned char _width;
 	unsigned char _height;
 	bool _connected;
-	std::vector<int> _neibhours;
+	std::vector<Room*> _neibhours;
 };
 
 struct Point
@@ -42,30 +42,32 @@ public:
 	void generateRooms();
 
 	/// <summary>
-	/// Génère les couloirs donjon
+	/// Génère les couloirs entre les salles
 	/// </summary>
-	void generatePassages(std::vector<Room> &rooms);
+	/// <param name="rooms">liste des salles</param>
+	/// <param name="origin">Point de départ de la génération de couloir</param>
+	void generatePassages(std::vector<Room*> rooms, Room* origin);
 
 	/// <summary>
-	/// génère un chemin (ensemble de pls couloirs) entre n salles
+	/// Creuse les couloirs dans la map
 	/// </summary>
-	/// <param name="rooms">Graphes des salles</param>
-	/// <param name="origin">Salle de départ du chemin</param>
-	void makePath(std::vector<Room> &rooms, Room &origin);
+	/// <param name="from">Point de départ du tunnel</param>
+	/// <param name="to">Arrivé du tunnel</param>
+	void dig(Room* from, Room* to);
 
 	/// <summary>
-	/// Cherche un point d'encrage à un chemin dans une salle
+	/// Trouve un point d'accroche  une salle 
 	/// </summary>
-	/// <param name="room">Salle dans laquelle chercher un point d'ancrage</param>
-	/// <param name="anchor">Référence vers le point à modifier</param>
-	void searchAnchorPoint(Room &room, Point &anchor);
+	/// <param name="room">Salle sur laquelle trouver le point d'acroche</param>
+	/// <param name="point">Point contenant le point d'accroche</param>
+	void getAnchorPoint(Room* room, Point &point);
 
 	/// <summary>
-	/// On teste si toutes les salles sont connectés
+	/// Algo de recherche en profondeur, parcours le donjon et indique quelles salles sont connectées
 	/// </summary>
-	/// <param name="rooms">Graphe des salles</param>
+	/// <param name="rooms">liste des salles</param>
 	/// <param name="origin">Salle de départ</param>
-	void dps(std::vector<Room> &rooms, Room &origin);
+	void dfs(std::vector<Room*> &rooms, Room* origin);
 
 	/// <summary>
 	/// Dessine la map

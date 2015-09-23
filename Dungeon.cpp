@@ -26,199 +26,140 @@ Dungeon::Dungeon()
 
 void Dungeon::generateRooms()
 {
-	std::vector<Room> rooms;
-	unsigned char roomsNumber = rand() % DUNGEON_ROOM_MAX + 5;
-	//g�n�ration "virtuelle" des salles
-	for (unsigned char i = 0; i != roomsNumber; i++)
+	//Création des salles
+	std::vector<Room*> rooms;
+	unsigned int rooms_number = rand() % (DUNGEON_ROOM_MAX - 2) + 2;
+	for (unsigned int i = 0; i != rooms_number; i++)
 	{
-		rooms.push_back(Room());
-		rooms[i]._width = rand() % (ROOM_WIDTH_MAX - 5) + 5;
-		rooms[i]._height = rand() % (ROOM_HEIGHT_MAX- 5) + 5;
-		rooms[i]._x = rand() % (_width - rooms[i]._width);
-		rooms[i]._y = rand() % (_height - rooms[i]._height);
-		rooms[i]._connected = false;
-		//test de collision avec l'une des salles pr�cedentes
-		bool  error = false;
-		auto it = rooms.begin();
-		while (!error && it != rooms.end() && (it - rooms.begin()) != i)
+		Room* room = new Room();
+		room->_width = rand() % (ROOM_WIDTH_MAX - 5) + 5;
+		room->_height = rand() % (ROOM_HEIGHT_MAX - 5) + 5;
+		room->_x = rand() % (_width - room->_width - 10) + 5;
+		room->_y = rand() % (_height - room->_height- 10) + 5;
+
+		//test de collision avec les autres salles
+		bool error = false;
+		unsigned int u = 0;
+		while (u != rooms.size() && !error)
 		{
-			if (rooms[i]._x + rooms[i]._width >= it->_x && rooms[i]._x <= it->_x + it->_width) //test de collision horizontal
+			if (room->_x + room->_width >= rooms[u]->_x && room->_x <= rooms[u]->_x + rooms[u]->_width) //test de collision horizontal
 			{
-				if (rooms[i]._y + rooms[i]._height >= it->_y && rooms[i]._y <= it->_y + it->_height) //test de collision vertical
+				if (room->_y + room->_height >= rooms[u]->_y && room->_y <= rooms[u]->_y + rooms[u]->_height)
 				{
-					//it = rooms.erase(rooms.begin()+i); //supression de la derni�re salle qui vient d'etre ajout�e si collision
 					error = true;
 				}
 			}
-			it++;
+			u++;
 		}
-		//si le test a r�ussi, application de la salle � la map
-		if (error == false)
+
+		//analyse des résultats
+		if (!error)
 		{
-			unsigned int x, y;
-			for (unsigned int u = 0; u != rooms[i]._width - 1; u++)
-			{
-				for (unsigned int o = 0; o != rooms[i]._height - 1; o++)
-				{
-					std::cout << rooms[i]._height << std::endl;
-					x = u + rooms[i]._x;
-					y = o + rooms[i]._y;
-					//placement du sol
-					_map[x][y] = CELL_FLOOR;
-					//placement des murs
-					_map[rooms[i]._x][y] = CELL_WALL;
-					_map[rooms[i]._x + rooms[i]._width - 1][y] = CELL_WALL;
-					_map[x][rooms[i]._y] = CELL_WALL;
-					_map[x][rooms[i]._y + rooms[i]._height - 1] = CELL_WALL;
-
-
-				}
-			}
-
-			/*
-			for (unsigned int u = rooms[i]._x; u != rooms[i]._x + rooms[i]._width - 1; u++)
-			{
-				for (unsigned int o = rooms[i]._y; o != rooms[i]._y + rooms[i]._height - 1; o++)
-				{
-					_map[u][o] = CELL_FLOOR;
-					//application des murs (on ne fait pas de test qui seraient plus couteux qu'utiles)
-					_map[rooms[i]._x][o] = CELL_WALL;
-					_map[rooms[i]._x + rooms[i]._width - 1][o] = CELL_WALL;
-					_map[u][rooms[i]._y] = CELL_WALL;
-					_map[u][rooms[i]._y + rooms[i]._height - 1] = CELL_WALL;
-				}
-			}**/
+			//ajout de la salle à la liste
+			rooms.push_back(room);
 		}
 	}
-	//passage � la g�n�ration des couloirs
-	generatePassages(rooms);
+	//selection d'une salle au hasard de départ
+	Room* start = rooms[rand() % rooms.size()];
+	generatePassages(rooms, start);
+	//applications des salles à la map et suppression de leur existence en mémoire
+	for (unsigned int i = 0; i != rooms.size(); i++)
+	{
+		for (unsigned int x = 0; x != rooms[i]->_width; x++)
+		{
+			for (unsigned int y = 0; y != rooms[i]->_height; y++)
+			{
+				_map[x + rooms[i]->_x][y + rooms[i]->_y] = CELL_FLOOR;
+			}
+		}
+		delete rooms[i];
+	}
+
+
 }
 
-
-void Dungeon::generatePassages(std::vector<Room> &rooms)
+void Dungeon::generatePassages(std::vector<Room*> rooms, Room* origin)
 {
-	//on choisit une salle au hasard
-	unsigned int index = rand() % rooms.size();
-	//on g�n�re un chemin � partir de cette salle
-	makePath(rooms, rooms[index]);
-	//on v�rifie que toutes les salles sont connect�s
-	//passage a false de tout  les bools de cnx des salles
+	//on choisit un nombre de salles à parcourir
+	unsigned int length = rand() % rooms.size();
+	//On choisit une liste de salle à parcourir
+	std::vector<Room*> path;
+	path.push_back(origin);
+	for (unsigned int i = 0; i != length; i++)
+	{
+		path.push_back(rooms[rand() % rooms.size()]);
+	}
+	//Creusage des tunnels
+	for (unsigned int i = 1; i != path.size(); i++)
+	{
+		//On indique aux salles qu'elles sont voisines
+		path[i - 1]->_neibhours.push_back(path[i]);
+		path[i]->_neibhours.push_back(path[i-1]);
+		//On dessine le passage
+		dig(path[i - 1], path[i]);
+	}
+	//on vérifie que toutes les salles sont reliées
 	for (unsigned int i = 0; i != rooms.size(); i++)
-		rooms[i]._connected = false;
-	//parcours en profondeur du donjon
-	dps(rooms, rooms[index]);
-	//test de connexion
+		rooms[i]->_connected = false;
+	dfs(rooms, origin);
 	bool done = true;
 	unsigned int i = 0;
 	while (i != rooms.size() && done == true)
 	{
-		if (rooms[i]._connected == false)
+		if (rooms[i]->_connected == false)
 			done = false;
 		i++;
 	}
-	if (done == false)
+	if (!done)
 	{
-		std::cout << "Dungeon non connexe, retry" << std::endl;
-		generatePassages(rooms);
+		origin = rooms[rand() % rooms.size()];
+		generatePassages(rooms, origin);
 	}
-	else
-		std::cout << "Generation du donjon terminee" << std::endl;
+
+
 }
 
-void Dungeon::makePath(std::vector<Room> &rooms, Room &origin)
+void Dungeon::dig(Room* from, Room* to)
 {
-	std::vector<Room*> path;
-	//on d�termine la longueur du chemin
-	unsigned int pathLenght = rand() % (rooms.size() - 2) + 2;
-	//on ajoute le sommet d'origine au chemin
-	path.push_back(&origin);
-	//on choisit des salles au hasard
-	unsigned int index;
-	for (unsigned int i = 0; i != pathLenght; i++)
+	Point current;
+	Point target;
+	getAnchorPoint(from, current);
+	getAnchorPoint(to, target);
+	while (current._x != target._x || current._y != target._y)
 	{
-		index = rand() % (rooms.size());
-		path.push_back(&rooms[index]);
-	}
-	//une fois que le chemin est d�termin�, on trace le chemin dans la map
-	index = 0;
-	Point start, end, current;
-	while ((index+1) < path.size())
-	{
-		//on indique aux salles qu'elles sont voisines
-		path[index]->_neibhours.push_back(index + 1);
-		path[index + 1]->_neibhours.push_back(index);
-		//on recherche des points d'ancrage pour le chemin
-		searchAnchorPoint((*path[index]), start);
-		searchAnchorPoint((*path[index+1]), end);
-		//on place le point courant sur le point d'ancrage de d�part
-		current = start;
 		_map[current._x][current._y] = CELL_FLOOR;
-		//tant qu'on a pas atteint la fin
-		while (current._x != end._x && current._y != end._y)
-		{
-			if (current._x < end._x)
-			{
-				current._x += 1;
-				_map[current._x][current._y + 1] = CELL_WALL;
-				_map[current._x][current._y - 1] = CELL_WALL;
-			}
-			else if (current._x > end._x)
-			{
-				current._x -= 1;
-				_map[current._x][current._y + 1] = CELL_WALL;
-				_map[current._x][current._y - 1] = CELL_WALL;
-			}
-			else if (current._y < end._y)
-			{
-				current._y += 1;
-				_map[current._x+1][current._y] = CELL_WALL;
-				_map[current._x-1][current._y] = CELL_WALL;
-			}
-			else if (current._y > end._y)
-			{
-				current._y -= 1;
-				_map[current._x + 1][current._y] = CELL_WALL;
-				_map[current._x - 1][current._y] = CELL_WALL;
-			}
-
-			_map[current._x][current._y] = CELL_FLOOR;
-		}
-		index += 1;
+		if (target._x > current._x)
+			current._x += 1;
+		else if (target._x < current._x)
+			current._x -= 1;
+		else if (target._y > current._y)
+			current._y += 1;
+		else if (target._y < current._y)
+			current._y -= 1;
 	}
 }
 
-
-void Dungeon::searchAnchorPoint(Room &room, Point &anchor)
+void Dungeon::getAnchorPoint(Room* room, Point &point)
 {
 	unsigned int side = rand() % 4;
 	switch (side)
 	{
 	case 0:
-		anchor._x = room._x;
-		anchor._y = rand() % (room._y + (room._height - 2) - 2) + 2;
+		point._x = room->_x;
+		point._y = room->_y + rand() % (room->_height - 3) + 2;
 		break;
 	case 1:
-		anchor._y = room._y;
-		anchor._x = rand() % (room._x + (room._width - 2) - 2) + 2;
+		point._y = room->_y;
+		point._x = room->_x + rand() % (room->_width - 3) + 2;
 		break;
 	case 2:
-		anchor._x = room._x + room._width -1 ;
-		anchor._y = rand() % (room._y + (room._height - 2) - 2) + 2;
+		point._x = room->_x+ room->_width -1 ;
+		point._y = room->_y + rand() % (room->_height - 3) + 2;
 		break;
 	case 3:
-		anchor._y = room._y + room._height - 1;
-		anchor._x = rand() % (room._x + (room._width - 2) - 2) + 2;
+		point._y = room->_y+room->_height;
+		point._x = room->_x + rand() % (room->_width - 3) + 2;
 		break;
-	}
-}
-
-void Dungeon::dps(std::vector<Room> &rooms, Room &origin)
-{
-	origin._connected = true;
-	for (unsigned int i = 0; i != origin._neibhours.size(); i++)
-	{
-		if (rooms[origin._neibhours[i]]._connected == false)
-			dps(rooms, rooms[origin._neibhours[i]]);
 	}
 }
 
@@ -244,6 +185,16 @@ void Dungeon::draw(sf::RenderWindow* render, const int x, const int y)
 			}
 			rect.left = -1;
 		}
+	}
+}
+
+void Dungeon::dfs(std::vector<Room*> &rooms, Room* origin)
+{
+	origin->_connected = true;
+	for (unsigned int i = 0; i != origin->_neibhours.size(); i++)
+	{
+		if (origin->_neibhours[i]->_connected == false)
+			dfs(rooms, origin->_neibhours[i]);
 	}
 }
 
