@@ -22,5 +22,7 @@
 #define CELL_EMPTY 0x00
 #define CELL_FLOOR 0x01
 #define CELL_WALL 0x02
+#define CELL_HWALL 0x03
+#define CELL_VWALL 0x04
 
 #endif

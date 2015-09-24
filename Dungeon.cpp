@@ -74,7 +74,8 @@ void Dungeon::generateRooms()
 		}
 		delete rooms[i];
 	}
-
+	//Génération des murs
+	generateWalls();
 
 }
 
@@ -118,7 +119,55 @@ void Dungeon::generatePassages(std::vector<Room*> rooms, Room* origin)
 		generatePassages(rooms, origin);
 	}
 
+}
 
+void Dungeon::generateWalls()
+{
+	//génération primaire
+	for (unsigned int x = _width-2; x != 0; x--)
+	{
+		for (unsigned int y = _height-2; y != 0; y--)
+		{
+			//Mur horizontal
+			if ((_map[x][y + 1] == CELL_FLOOR &&  _map[x][y] == CELL_EMPTY) || (_map[x][y - 1] == CELL_FLOOR  && _map[x][y] == CELL_EMPTY))
+			{
+				_map[x][y] = CELL_HWALL;
+			}
+			//Mur vertical
+			if ((_map[x + 1][y] == CELL_FLOOR &&  _map[x][y] == CELL_EMPTY) || (_map[x - 1][y] == CELL_FLOOR  && _map[x][y] == CELL_EMPTY))
+			{
+				_map[x][y] = CELL_VWALL;
+			}
+		}
+	}
+	//bouchage
+	for (unsigned int x = 1; x != _width - 2; x++)
+	{
+		for (unsigned int y = 1; y != _height - 2; y++)
+		{
+			//Bouchage des coins
+
+			if (_map[x][y] == CELL_EMPTY && _map[x + 1][y + 1] == CELL_FLOOR)
+				_map[x][y] = CELL_VWALL;
+			if (_map[x][y] == CELL_EMPTY && _map[x - 1][y + 1] == CELL_FLOOR)
+				_map[x][y] = CELL_VWALL;
+			if (_map[x][y] == CELL_EMPTY && _map[x + 1][y - 1] == CELL_FLOOR)
+				_map[x][y] = CELL_HWALL;
+			if (_map[x][y] == CELL_EMPTY && _map[x - 1][y - 1] == CELL_FLOOR)
+				_map[x][y] = CELL_HWALL;
+		}
+	}
+
+	//netoyage
+	for (unsigned int x = 0; x != _width - 2; x++)
+	{
+		for (unsigned int y = 0; y != _height - 2; y++)
+		{
+			//Correction des incohérence de perspective des murs
+			if (_map[x][y] == CELL_HWALL && (_map[x][y + 1] == CELL_VWALL || _map[x][y+1] == CELL_HWALL))
+				_map[x][y] = CELL_VWALL;
+		}
+	}
 }
 
 void Dungeon::dig(Room* from, Room* to)

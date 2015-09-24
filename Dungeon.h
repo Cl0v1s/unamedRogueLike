@@ -69,6 +69,8 @@ public:
 	/// <param name="origin">Salle de départ</param>
 	void dfs(std::vector<Room*> &rooms, Room* origin);
 
+	void generateWalls();
+
 	/// <summary>
 	/// Dessine la map
 	/// </summary>
