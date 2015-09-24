@@ -81,7 +81,7 @@ void Dungeon::generateRooms()
 void Dungeon::generatePassages(std::vector<Room*> rooms, Room* origin)
 {
 	//on choisit un nombre de salles à parcourir
-	unsigned int length = rand() % rooms.size();
+	unsigned int length = rand() % 3 + 1;
 	//On choisit une liste de salle à parcourir
 	std::vector<Room*> path;
 	path.push_back(origin);
@@ -108,11 +108,13 @@ void Dungeon::generatePassages(std::vector<Room*> rooms, Room* origin)
 	{
 		if (rooms[i]->_connected == false)
 			done = false;
-		i++;
+		else 
+			i++;
 	}
 	if (!done)
 	{
-		origin = rooms[rand() % rooms.size()];
+		//on utilise la salle non reliée trouvée ci-dessus
+		origin = rooms[i];
 		generatePassages(rooms, origin);
 	}
 
@@ -157,7 +159,7 @@ void Dungeon::getAnchorPoint(Room* room, Point &point)
 		point._y = room->_y + rand() % (room->_height - 3) + 2;
 		break;
 	case 3:
-		point._y = room->_y+room->_height;
+		point._y = room->_y+room->_height - 1;
 		point._x = room->_x + rand() % (room->_width - 3) + 2;
 		break;
 	}
