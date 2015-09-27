@@ -1,7 +1,7 @@
 #include "Entity.h"
 
 
-Entity::Entity(int x, int y, unsigned int width, unsigned int height, std::string file)
+Entity::Entity(const int x,const int y, const unsigned int width, const unsigned int height,const std::string file)
 {
 	_x = x; _y = y; _width = width; _height = height;
 	if (!_texture.loadFromFile(file))
@@ -14,7 +14,7 @@ Entity::Entity(int x, int y, unsigned int width, unsigned int height, std::strin
 void Entity::draw(sf::RenderWindow* render)
 {
 	//gestion de l'animation
-	unsigned int frame = _frame; //on ne garde que la partie entière
+	unsigned int frame = (unsigned int)_frame; //on ne garde que la partie entière
 	_sprite.setTextureRect(sf::IntRect(frame*_width, 0, _width, _height));
 	render->draw(_sprite);
 }

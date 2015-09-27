@@ -21,7 +21,7 @@ private:
 	sf::Texture _texture;
 	sf::Sprite _sprite;
 public:
-	Entity(int x, int y, unsigned int width, unsigned int height, std::string file);
+	Entity(const int x, const int y, const unsigned int width, const unsigned int height,const std::string file);
 	virtual void draw(sf::RenderWindow* render);
 	virtual void update();
 	virtual ~Entity();
