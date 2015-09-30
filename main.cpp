@@ -4,6 +4,7 @@
 #include <thread>
 
 #include <SFML/Graphics.hpp>
+#include <SFML\Network.hpp>
 
 #include "Const.h"
 #include "Scene.h"
@@ -13,7 +14,7 @@
 void start_server(sf::RenderWindow* window)
 {
 	Server server(NETWORK_PORT);
-	while(window->isOpen())
+	while(server.isAlive())
 	{
 		//boucle d'attente de clients
 		server.waitForClients();
@@ -55,6 +56,10 @@ int main()
 			window.display();
 		}
 	}
+	//on envoie le message d'arret au serveur
+	sf::UdpSocket sender;
+	sf::IpAddress recipient = "localhost";
+	sender.send("we salute you !", 32, recipient, NETWORK_PORT);
 	//atteindre la fin du thread online
 	online.join();
 	return 0;
