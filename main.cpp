@@ -1,12 +1,25 @@
 #include <stdlib.h>
 #include <iostream>
 #include <time.h>
+#include <thread>
 
 #include <SFML/Graphics.hpp>
 
 #include "Const.h"
 #include "Scene.h"
 #include "SceneGame.h"
+#include "Server.h"
+
+void start_server(sf::RenderWindow* window)
+{
+	Server server(NETWORK_PORT);
+	while(window->isOpen())
+	{
+		//boucle d'attente de clients
+		server.waitForClients();
+	}
+}
+
 
 int main()
 {
@@ -17,6 +30,8 @@ int main()
 	Scene* current_scene = new SceneGame();
 	//gestion du framerate
 	sf::Clock timer;
+	//gestion du thread multijoueur
+	std::thread online(start_server, &window);
 	while (window.isOpen())
 	{
 		//gestion de la logique
@@ -40,6 +55,7 @@ int main()
 			window.display();
 		}
 	}
-
+	//atteindre la fin du thread online
+	online.join();
 	return 0;
 }
