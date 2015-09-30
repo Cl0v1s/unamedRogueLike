@@ -29,6 +29,8 @@
 //DEFINITION VARIABLES RESEAU
 #define NETWORK_PORT 666
 #define NETWORK_MAX_BUFFER 32
+#define NETWORK_SENDPORT 0x01 //définition des messages réseaux
+#define NETWORK_KILL 0x02
 
 
 #endif

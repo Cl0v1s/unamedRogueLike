@@ -20,6 +20,7 @@ private:
     int _adress;
     int _port;
 	std::vector<std::thread*> _clients;
+	std::vector<int> _clientPorts;
     sf::UdpSocket* _listener;
 public:
     Server(const unsigned int port);
