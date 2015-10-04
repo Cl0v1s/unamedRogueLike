@@ -1,9 +1,10 @@
 #include "Server.h"
 
-Server::Server(const unsigned int port)
+Server::Server(SceneGame *scene, const unsigned int port)
 {
 	_alive = true;
     _port = port;
+	_scene = scene;
     _listener = new sf::UdpSocket();
 	if (_listener->bind(port) != sf::Socket::Done)
 	{
@@ -43,29 +44,38 @@ void Server::waitForClients()
 
 void Server::manageClient(sf::IpAddress client)
 {
+	srand(time(0x00));
 	//sélection d'un port aléatoire au dessus du port 1024
 	int port = rand() % (65536 - 2048) + 2048;
-	_clientPorts.push_back(port);
 	//création du pprt d'écoute
-	sf::UdpSocket receiver;
-	while (receiver.bind(port) != sf::Socket::Done)
+	sf::UdpSocket socket;
+	while (socket.bind(port) != sf::Socket::Done)
 	{
 		port = rand() % (65536 - 2048) + 2048;
 	}
-	//création du port d'envoi de données vers le client
-	sf::UdpSocket sender;
+	_clientPorts.push_back(port);
+	std::cout << "Ouverture d'un port d'ecoute pour " << client.toString() << " sur le port " << port << std::endl;
 	//détermination du message
-	int data = NETWORK_SENDPORT; data = data << 24; data = data | port;
-	//envoi du message contenant le port sur lequel le client peut communiquer
-	sender.send((char*)data, 4, client, NETWORK_PORT);
-	//boucle de réception des données
+	std::stringstream buffer; buffer << NETWORK_SENDPORT << ":" << port;
+	//envoi du message
+	socket.send(buffer.str().c_str(), sizeof(buffer), client, NETWORK_PORT + 1);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*boucle de réception des données
 	bool done = false;
 	size_t received;
 	char msg[4];
 	unsigned short client_port;
 	while (!done)
 	{
-		if (receiver.receive(msg, 4, received, client, client_port) != sf::Socket::Done)
+		if (socket.receive(msg, 4, received, client, client_port) != sf::Socket::Done)
 		{
 			assert("Erreur lors de la réception des données.");
 		}
@@ -75,8 +85,11 @@ void Server::manageClient(sf::IpAddress client)
 		{
 			done = true;
 		}
-		//traiter ici les autres commandes
-	}
+		else
+		{
+
+		}
+	}*/
 }
 
 Server::~Server()

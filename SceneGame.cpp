@@ -1,10 +1,10 @@
 #include "SceneGame.h"
 
-
-SceneGame::SceneGame()
+SceneGame::SceneGame(GameType type)
 {
 	_dungeon = new Dungeon();
-	_dungeon->generateRooms();
+	if (type == GameType::server)
+		_dungeon->generateRooms();
 	_canvas[0] = 0;
 	_canvas[1] = 1;
 }

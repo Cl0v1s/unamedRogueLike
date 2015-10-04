@@ -6,6 +6,10 @@
 #include "Scene.h"
 #include "Dungeon.h"
 
+enum GameType{
+	server,
+	client,
+};
 
 class SceneGame :
 	public Scene
@@ -15,7 +19,7 @@ private:
 	int _canvas[2];
 
 public:
-	SceneGame();
+	SceneGame(GameType type);
 	void draw(sf::RenderWindow* render);
 	void update();
 	virtual ~SceneGame();

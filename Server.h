@@ -6,11 +6,14 @@
 #include <cassert>
 #include <thread>
 #include <vector>
+#include <sstream>
+#include <cstdio>
 
 #include <SFML\Network.hpp>
 
 
 #include "Const.h"
+#include "SceneGame.h"
 
 
 class Server
@@ -22,8 +25,9 @@ private:
 	std::vector<std::thread*> _clients;
 	std::vector<int> _clientPorts;
     sf::UdpSocket* _listener;
+	SceneGame* _scene;
 public:
-    Server(const unsigned int port);
+    Server(SceneGame* scene, const unsigned int port);
     void waitForClients();
 	bool isAlive();
 	void manageClient(sf::IpAddress client);

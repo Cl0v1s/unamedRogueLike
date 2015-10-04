@@ -10,10 +10,12 @@
 #include "Scene.h"
 #include "SceneGame.h"
 #include "Server.h"
+#include "Client.h"
 
-void start_server(sf::RenderWindow* window)
+void start_server(SceneGame *scene)
 {
-	Server server(NETWORK_PORT);
+	srand(time(0x00));
+	Server server(scene, NETWORK_PORT);
 	while(server.isAlive())
 	{
 		//boucle d'attente de clients
@@ -21,18 +23,38 @@ void start_server(sf::RenderWindow* window)
 	}
 }
 
+void start_client(SceneGame *scene)
+{
+	srand(time(0x00));
+	Client client(scene, sf::IpAddress("127.0.0.1"));
+	while (client.isAlive())
+	{
+		client.update();
+	}
+}
 
-int main()
+
+int main(int argc, char **argv)
 {
 	//initialisation du jeu
 	//initialisation de la fenetre
 	sf::RenderWindow window(sf::VideoMode(DEVICE_WIDTH, DEVICE_HEIGHT), "AcrossTheDungeon");
-	srand(time(CELL_EMPTY));
-	Scene* current_scene = new SceneGame();
+	srand(time(0x00));
+	Scene* current_scene;
+	SceneGame* scene_game;
+	if (strcmp(argv[1], "-client") == 0)
+		scene_game = new SceneGame(GameType::client);
+	else 
+		scene_game = new SceneGame(GameType::server);
+	current_scene = scene_game;
 	//gestion du framerate
 	sf::Clock timer;
-	//gestion du thread multijoueur
-	std::thread online(start_server, &window);
+	std::thread* online;
+	//gestion du multijoueur
+	if (strcmp(argv[1], "-client") == 0)
+		online = new std::thread(start_client, scene_game);
+	else 
+		online = new std::thread(start_server, scene_game);
 	while (window.isOpen())
 	{
 		//gestion de la logique
@@ -61,6 +83,7 @@ int main()
 	sf::IpAddress recipient = "localhost";
 	sender.send("we salute you !", 32, recipient, NETWORK_PORT);
 	//atteindre la fin du thread online
-	online.join();
+	online->join();
+	delete online;
 	return 0;
 }
