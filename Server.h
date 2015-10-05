@@ -8,8 +8,9 @@
 #include <vector>
 #include <sstream>
 #include <cstdio>
+#include <cstring>
 
-#include <SFML\Network.hpp>
+#include <SFML/Network.hpp>
 
 
 #include "Const.h"

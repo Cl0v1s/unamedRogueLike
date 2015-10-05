@@ -4,7 +4,7 @@
 #include <thread>
 
 #include <SFML/Graphics.hpp>
-#include <SFML\Network.hpp>
+#include <SFML/Network.hpp>
 
 #include "Const.h"
 #include "Scene.h"
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 	SceneGame* scene_game;
 	if (strcmp(argv[1], "-client") == 0)
 		scene_game = new SceneGame(GameType::client);
-	else 
+	else
 		scene_game = new SceneGame(GameType::server);
 	current_scene = scene_game;
 	//gestion du framerate
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 	//gestion du multijoueur
 	if (strcmp(argv[1], "-client") == 0)
 		online = new std::thread(start_client, scene_game);
-	else 
+	else
 		online = new std::thread(start_server, scene_game);
 	while (window.isOpen())
 	{

@@ -16,7 +16,7 @@
 
 class Client
 {
-private: 
+private:
 	sf::UdpSocket* _socket;
 	bool alive;
 	SceneGame* _scene;
@@ -28,4 +28,3 @@ public:
 };
 
 #endif
-
