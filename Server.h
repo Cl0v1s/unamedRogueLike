@@ -15,6 +15,7 @@
 
 #include "Const.h"
 #include "SceneGame.h"
+#include "Packet.h"
 
 
 class Server

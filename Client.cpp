@@ -50,16 +50,38 @@ void Client::update()
 	unsigned short distant_port;
 	int command;
 	int args;
+	Packet* current = 0x00;
 	while(!done)
 	{
 		_socket->receive(buffer, sizeof(buffer), received, distant, distant_port);
 		//controle de l'origine du paquet
-		if(distant != _server)
+		if(distant != _server && distant != sf::IpAddress("127.0.0.1"))
 		{
-			assert("Paquet ne provenant pas du server recu.");
+			assert("Paquet ne provenant pas d'un auteur autorise.");
 		}
-		sscanf(buffer, "%d:%d", &command, &args);
+		else
+		{
+			sscanf(buffer, "%d:%d", &command, &args);
+			switch(command)
+			{
+				case NETWORK_KILL:
+					done = true;
+					break;
+				case NETWORK_STOP:
+					if(current != 0x00)
+					{
+						current->process(_scene);
+						delete current;
+					}
+				break;
+				default:
+					if(current != 0x00)
+						current->addData(args);
+				break;
+			}
+		}
 	}
+	std::cout << "Fermeture de la connexion avec le serveur." << std::endl;
 }
 
 Client::~Client()

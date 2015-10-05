@@ -37,6 +37,13 @@ void Server::waitForClients()
 	{
 		_alive = false;
 		std::cout << "Reception du code d'arret " << sender.toString() << std::endl;
+		//On envoie kill à tout les thread fils
+		sf::IpAddress recipient = "localhost";
+		std::stringstream ss; ss << NETWORK_KILL << ":0";
+		for(unsigned int i = 0; i != _clientPorts.size(); i++)
+		{
+			_listener->send(ss.str().c_str(), sizeof(ss), recipient, _clientPorts[i]);
+		}
 	}
 	else
 		std::cout << "Message incomprehensible recu de " << sender << std::endl;
@@ -45,6 +52,7 @@ void Server::waitForClients()
 void Server::manageClient(sf::IpAddress client)
 {
 	srand(time(0x00));
+	bool done = false;
 	//sélection d'un port aléatoire au dessus du port 1024
 	int port = rand() % (65536 - 2048) + 2048;
 	//création du pprt d'écoute
@@ -59,37 +67,47 @@ void Server::manageClient(sf::IpAddress client)
 	std::stringstream buffer; buffer << NETWORK_SENDPORT << ":" << port;
 	//envoi du message
 	socket.send(buffer.str().c_str(), sizeof(buffer), client, NETWORK_PORT + 1);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*boucle de réception des données
-	bool done = false;
+	char data[1024];
+	sf::IpAddress distant;
+	unsigned short distant_port;
 	size_t received;
-	char msg[4];
-	unsigned short client_port;
-	while (!done)
+	int command, args;
+	Packet* current = 0x00;
+	while(!done)
 	{
-		if (socket.receive(msg, 4, received, client, client_port) != sf::Socket::Done)
+		//reception des données brutes
+		socket.receive(buffer, sizeof(buffer), received, distant, distant_port);
+		if(distant != client && distant != sf::IpAddress("127.0.0.1"))
 		{
-			assert("Erreur lors de la réception des données.");
-		}
-		//traitement des données
-		//traitement du message  d'arret du thread
-		if (msg[0] == NETWORK_KILL && client.toString() == "127.0.0.1")
-		{
-			done = true;
+			assert("Paquet recu d'une source illegale.");
 		}
 		else
 		{
+			//formatage des données
+			sscanf(data, "%d:%d", &command, &args);
+			switch (command) {
+				case NETWORK_KILL:
+					if(distant == sf::IpAddress("127.0.0.1"))
+						done = true;
+				break;
+				case NETWORK_STOP:
+					if(current != 0x00)
+					{
+						current->process(_scene);
+						delete current;
+					}
+					break;
+				default:
+					if(current != 0x00)
+						current->addData(args);
+				break;
 
+			}
 		}
-	}*/
+	}
+	//On indique au client que la connexion est terminée
+	buffer.str("");buffer << NETWORK_KILL  << ":0";
+	socket.send(buffer.str().c_str(), sizeof(buffer), client, NETWORK_PORT +1);
 }
 
 Server::~Server()

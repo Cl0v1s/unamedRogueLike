@@ -2,6 +2,7 @@
 #include <iostream>
 #include <time.h>
 #include <thread>
+#include <sstream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
@@ -81,7 +82,10 @@ int main(int argc, char **argv)
 	//on envoie le message d'arret au serveur
 	sf::UdpSocket sender;
 	sf::IpAddress recipient = "localhost";
+	std::stringstream ss; ss << NETWORK_KILL << ":0";
 	sender.send("we salute you !", 32, recipient, NETWORK_PORT);
+	sender.send(ss.str().c_str(), sizeof(ss), recipient, NETWORK_PORT+1);
+
 	//atteindre la fin du thread online
 	online->join();
 	delete online;
