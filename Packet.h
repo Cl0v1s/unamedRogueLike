@@ -16,11 +16,10 @@ protected:
 public:
 	Packet();
 	Packet(unsigned char code);
+	virtual ~Packet();
 	void addData(int data);
 	void send(sf::UdpSocket &socket, sf::IpAddress distant, const unsigned short port);
 	virtual void process(SceneGame *scene) = 0;
-	~Packet();
 };
 
 #endif
-

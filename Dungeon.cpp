@@ -109,7 +109,7 @@ void Dungeon::generatePassages(std::vector<Room*> rooms, Room* origin)
 	{
 		if (rooms[i]->_connected == false)
 			done = false;
-		else 
+		else
 			i++;
 	}
 	if (!done)
@@ -214,7 +214,7 @@ void Dungeon::getAnchorPoint(Room* room, Point &point)
 	}
 }
 
-void Dungeon::draw(sf::RenderWindow* render, const int x, const int y)
+void Dungeon::draw(sf::RenderWindow* render, const unsigned int x, const unsigned int y)
 {
 	sf::Sprite sprite;
 	sf::IntRect rect;
@@ -222,9 +222,9 @@ void Dungeon::draw(sf::RenderWindow* render, const int x, const int y)
 	rect.width = 32;
 	rect.height = 32;
 	sprite.setTexture(*_tileset);
-	for (int i = 0; i != DEVICE_WIDTH / 32; i++)
+	for (unsigned int i = 0; i != DEVICE_WIDTH / 32; i++)
 	{
-		for (int u = 0; u != DEVICE_HEIGHT / 32; u++)
+		for (unsigned int u = 0; u != DEVICE_HEIGHT / 32; u++)
 		{
 			if ( i + x >= 0 && i + x < _width && u + y >= 0 && u + y < _height)
 				rect.left = (_map[i+x][u+y]-1) * 32;

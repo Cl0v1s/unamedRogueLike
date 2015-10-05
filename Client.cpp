@@ -4,7 +4,7 @@
 Client::Client(SceneGame *scene, sf::IpAddress server)
 {
 	alive = true;
-	_scene = scene; 
+	_scene = scene;
 	unsigned short server_port;
 	int command;
 	int args;
@@ -15,16 +15,16 @@ Client::Client(SceneGame *scene, sf::IpAddress server)
 		assert("Impossible d'ouvrir le port d'ecoute pour le serveur !");
 	}
 	std::cout << "Tentative de connexion vers " << server.toString() << std::endl;
-	char* data = "ready to rock !";
+	char* data = (char *)"ready to rock !";
 	_socket->send(data, 32, server, NETWORK_PORT);
-	//attente de la récéption du port
+	//attente de la rï¿½cï¿½ption du port
 	char buffer[1024];
 	size_t received;
 	_socket->receive(buffer, sizeof(buffer), received, server, server_port);
-	//traitement des données
+	//traitement des donnï¿½es
 	std::cout << "recu " << buffer << std::endl;
 	sscanf(buffer, "%d:%d;", &command, &args);
-	
+
 
 }
 
@@ -60,7 +60,7 @@ void Client::update()
 			if (currentPacket != 0x00)
 			{
 				int d = 0;
-				//rassemblement des donnes en un seul entier 
+				//rassemblement des donnes en un seul entier
 				for (unsigned int i = 0; i != received; i++)
 				{
 					d = d | msg[i];
