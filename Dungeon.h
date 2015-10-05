@@ -9,7 +9,7 @@
 
 #include "Const.h"
 
-//définition des structures utiles à la génération
+//dï¿½finition des structures utiles ï¿½ la gï¿½nï¿½ration
 struct Room
 {
 	unsigned int _x;
@@ -37,36 +37,36 @@ public:
 	Dungeon();
 
 	/// <summary>
-	/// Génère les salles du donjon
+	/// Gï¿½nï¿½re les salles du donjon
 	/// </summary>
 	void generateRooms();
 
 	/// <summary>
-	/// Génère les couloirs entre les salles
+	/// Gï¿½nï¿½re les couloirs entre les salles
 	/// </summary>
 	/// <param name="rooms">liste des salles</param>
-	/// <param name="origin">Point de départ de la génération de couloir</param>
+	/// <param name="origin">Point de dï¿½part de la gï¿½nï¿½ration de couloir</param>
 	void generatePassages(std::vector<Room*> rooms, Room* origin);
 
 	/// <summary>
 	/// Creuse les couloirs dans la map
 	/// </summary>
-	/// <param name="from">Point de départ du tunnel</param>
-	/// <param name="to">Arrivé du tunnel</param>
+	/// <param name="from">Point de dï¿½part du tunnel</param>
+	/// <param name="to">Arrivï¿½ du tunnel</param>
 	void dig(Room* from, Room* to);
 
 	/// <summary>
-	/// Trouve un point d'accroche  une salle 
+	/// Trouve un point d'accroche  une salle
 	/// </summary>
 	/// <param name="room">Salle sur laquelle trouver le point d'acroche</param>
 	/// <param name="point">Point contenant le point d'accroche</param>
 	void getAnchorPoint(Room* room, Point &point);
 
 	/// <summary>
-	/// Algo de recherche en profondeur, parcours le donjon et indique quelles salles sont connectées
+	/// Algo de recherche en profondeur, parcours le donjon et indique quelles salles sont connectï¿½es
 	/// </summary>
 	/// <param name="rooms">liste des salles</param>
-	/// <param name="origin">Salle de départ</param>
+	/// <param name="origin">Salle de dï¿½part</param>
 	void dfs(std::vector<Room*> &rooms, Room* origin);
 
 	void generateWalls();
@@ -77,11 +77,10 @@ public:
 	/// <param name="render">Support de dessin</param>
 	/// <param name="x">position x du canvas</param>
 	/// <param name="y">position y du canvas</param>
-	void draw(sf::RenderWindow* render, const int x, const int y);
+	void draw(sf::RenderWindow* render, const unsigned int x, const unsigned int y);
 
 
 	~Dungeon();
 };
 
 #endif
-

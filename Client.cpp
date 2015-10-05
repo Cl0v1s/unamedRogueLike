@@ -5,6 +5,7 @@ Client::Client(SceneGame *scene, sf::IpAddress server)
 {
 	alive = true;
 	_scene = scene;
+	unsigned short server_port;
 	int command;
 	int args;
 	//creation de la lisaison durable sur le serveur
@@ -14,7 +15,7 @@ Client::Client(SceneGame *scene, sf::IpAddress server)
 		assert("Impossible d'ouvrir le port d'ecoute pour le serveur !");
 	}
 	std::cout << "Tentative de connexion vers " << server.toString() << std::endl;
-	char* data = "ready to rock !";
+	char* data = (char *)"ready to rock !";
 	_socket->send(data, 32, server, NETWORK_PORT);
 	//attente de la r�c�ption du port
 	char buffer[1024];
@@ -57,7 +58,7 @@ void Client::update()
 		{
 			assert("Paquet ne provenant pas du server recu.");
 		}
-		sscanf("%d:%d", &command, &args);
+		sscanf(buffer, "%d:%d", &command, &args);
 	}
 }
 
