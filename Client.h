@@ -18,6 +18,8 @@ class Client
 {
 private:
 	sf::UdpSocket* _socket;
+	sf::IpAddress _server;
+	unsigned short _serverPort;
 	bool alive;
 	SceneGame* _scene;
 public:

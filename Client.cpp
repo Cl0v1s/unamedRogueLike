@@ -4,8 +4,7 @@
 Client::Client(SceneGame *scene, sf::IpAddress server)
 {
 	alive = true;
-	_scene = scene; 
-	unsigned short server_port;
+	_scene = scene;
 	int command;
 	int args;
 	//creation de la lisaison durable sur le serveur
@@ -17,15 +16,23 @@ Client::Client(SceneGame *scene, sf::IpAddress server)
 	std::cout << "Tentative de connexion vers " << server.toString() << std::endl;
 	char* data = "ready to rock !";
 	_socket->send(data, 32, server, NETWORK_PORT);
-	//attente de la récéption du port
+	//attente de la rï¿½cï¿½ption du port
 	char buffer[1024];
 	size_t received;
-	_socket->receive(buffer, sizeof(buffer), received, server, server_port);
-	//traitement des données
-	std::cout << "recu " << buffer << std::endl;
+	_socket->receive(buffer, sizeof(buffer), received, server, _serverPort);
+	//traitement des donnï¿½es
 	sscanf(buffer, "%d:%d;", &command, &args);
-	
-
+	if(command == NETWORK_SENDPORT)
+	{
+		_server = server;
+		_serverPort = args;
+		std::cout << "Connexion Ã©tablie au serveur a l'adresse " << _server << " sur le port " <<  _serverPort << std::endl;
+	}
+	else
+	{
+		assert("Message inattendu.");
+		exit(1);
+	}
 }
 
 bool Client::isAlive()
@@ -36,41 +43,21 @@ bool Client::isAlive()
 void Client::update()
 {
 	bool done = false;
-	sf::IpAddress distant;
-	unsigned short port;
+	char buffer[1024];
 	size_t received;
-	char msg[4];
-	Packet* currentPacket = 0x00;
-	while (!done)
+	sf::IpAddress distant;
+	unsigned short distant_port;
+	int command;
+	int args;
+	while(!done)
 	{
-		std::cout << "En attente de messages..." << std::endl;
-		_socket->receive(msg, 4, received, distant, port);
-		std::cout << "Reception du msg " << msg[0] << std::endl;
-		//traitement du packet de port
-		switch (msg[0])
+		_socket->receive(buffer, sizeof(buffer), received, distant, distant_port);
+		//controle de l'origine du paquet
+		if(distant != _server)
 		{
-		case NETWORK_STOP: //execution et supression du paquet courant
-			if (currentPacket != 0x00)
-			{
-				currentPacket->process(_scene);
-				delete currentPacket;
-			}
-			break;
-		default:
-			if (currentPacket != 0x00)
-			{
-				int d = 0;
-				//rassemblement des donnes en un seul entier 
-				for (unsigned int i = 0; i != received; i++)
-				{
-					d = d | msg[i];
-					d = d << 8;
-				}
-				currentPacket->addData(d);
-			}
-			break;
+			assert("Paquet ne provenant pas du server recu.");
 		}
-
+		sscanf("%d:%d", &command, &args);
 	}
 }
 
