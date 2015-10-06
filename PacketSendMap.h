@@ -11,6 +11,6 @@ public:
     PacketSendMap();
     void prepare(SceneGame* scene);
     void process(SceneGame* scene);
-}
+};
 
 #endif

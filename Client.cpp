@@ -5,7 +5,6 @@ Client::Client(SceneGame *scene, sf::IpAddress server)
 {
 	alive = true;
 	_scene = scene;
-	unsigned short server_port;
 	int command;
 	int args;
 	//creation de la lisaison durable sur le serveur
