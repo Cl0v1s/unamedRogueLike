@@ -37,25 +37,28 @@ void start_client(SceneGame *scene)
 
 int main(int argc, char **argv)
 {
+	Scene* current_scene;
+	SceneGame* scene_game;
+    //gestion du framerate
+    sf::Clock timer;
+    std::thread* online;
+	if (strcmp(argv[1], "-client") == 0) {
+		scene_game = new SceneGame(GameType::client);
+    	//gestion du multijoueur
+    	online = new std::thread(start_client, scene_game);
+	} else if (strcmp(argv[1], "-serveur") == 0) {
+		scene_game = new SceneGame(GameType::server);
+    	//gestion du multijoueur
+    	online = new std::thread(start_server, scene_game);
+    } else {
+        printf("Utilisation :\n\"%s -serveur\" si vous voulez être le serveur\n\"%s -client\" si vous voulez être le client\n", argv[0], argv[0]);
+        return 0;
+    }
+    current_scene = scene_game;
 	//initialisation du jeu
 	//initialisation de la fenetre
 	sf::RenderWindow window(sf::VideoMode(DEVICE_WIDTH, DEVICE_HEIGHT), "AcrossTheDungeon");
 	srand(time(0x00));
-	Scene* current_scene;
-	SceneGame* scene_game;
-	if (strcmp(argv[1], "-client") == 0)
-		scene_game = new SceneGame(GameType::client);
-	else
-		scene_game = new SceneGame(GameType::server);
-	current_scene = scene_game;
-	//gestion du framerate
-	sf::Clock timer;
-	std::thread* online;
-	//gestion du multijoueur
-	if (strcmp(argv[1], "-client") == 0)
-		online = new std::thread(start_client, scene_game);
-	else
-		online = new std::thread(start_server, scene_game);
 	while (window.isOpen())
 	{
 		//gestion de la logique
