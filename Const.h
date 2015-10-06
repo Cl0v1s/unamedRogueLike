@@ -30,9 +30,10 @@
 #define NETWORK_PORT 6666
 #define NETWORK_MAX_BUFFER 32
 #define NETWORK_STOP 0x00 //définition des messages réseaux
-#define NETWORK_SENDPORT 0x01
-#define NETWORK_KILL 0x02
-#define NETWORK_SENDMAP 0x03
+#define NETWORK_KILL 0x01
+#define NETWORK_NEXT 0x02
+#define NETWORK_SENDPORT 0x03
+#define NETWORK_SENDMAP 0x04
 
 
 #endif

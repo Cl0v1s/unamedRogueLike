@@ -249,6 +249,21 @@ void Dungeon::dfs(std::vector<Room*> &rooms, Room* origin)
 	}
 }
 
+unsigned int Dungeon::getWidth() const
+{
+	return _width;
+}
+
+unsigned int Dungeon::getHeight() const
+{
+	return _height;
+}
+
+char Dungeon::getCellAt(const unsigned int x, const unsigned int y) const
+{
+	return _map[x][y];
+}
+
 
 Dungeon::~Dungeon()
 {

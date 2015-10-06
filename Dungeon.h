@@ -80,6 +80,10 @@ public:
 	void draw(sf::RenderWindow* render, const unsigned int x, const unsigned int y);
 
 
+	unsigned int getWidth() const;
+	unsigned int getHeight() const;
+	char getCellAt(const unsigned int x, const unsigned int y) const;
+
 	~Dungeon();
 };
 

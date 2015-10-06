@@ -97,10 +97,13 @@ void Server::manageClient(sf::IpAddress client)
 						delete current;
 					}
 					break;
-				default:
+				case NETWORK_NEXT:
 					if(current != 0x00)
 						current->addData(args);
 				break;
+				default:
+					assert("Paquet incomprehensible recu.");
+					break;
 
 			}
 		}

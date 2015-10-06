@@ -41,3 +41,8 @@ void SceneGame::update()
 		_canvas[1] += 1;
 	}
 }
+
+Dungeon* SceneGame::getDungeon() const
+{
+	return _dungeon;
+}

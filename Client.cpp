@@ -74,10 +74,13 @@ void Client::update()
 						delete current;
 					}
 				break;
-				default:
+				case NETWORK_NEXT:
 					if(current != 0x00)
 						current->addData(args);
 				break;
+				default:
+					assert("Paquet incompréhensible recu.");
+					break;
 			}
 		}
 	}

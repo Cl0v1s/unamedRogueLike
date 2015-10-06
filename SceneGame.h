@@ -22,7 +22,8 @@ public:
 	SceneGame(GameType type);
 	void draw(sf::RenderWindow* render);
 	void update();
+	Dungeon* getDungeon() const;
 	virtual ~SceneGame();
 };
 
-#endif 
+#endif
