@@ -11,7 +11,7 @@ void PacketSendMap::prepare(SceneGame* scene)
     
 }
 
-void PacketSendMap::process(SceneGame* scene)
+void PacketSendMap::process(SceneGame* scene, sf::UdpSocket &socket, sf::IpAddress &distant, unsigned short port)
 {
 
 }

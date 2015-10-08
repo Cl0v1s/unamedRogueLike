@@ -31,8 +31,19 @@ Client::Client(SceneGame *scene, sf::IpAddress server)
 	else
 	{
 		assert("Message inattendu.");
+		//TODO: faire un truc moins brutus
 		exit(1);
 	}
+	_server = server;
+	prepare();
+}
+
+void Client::prepare()
+{
+	//Envoi de la demande de map
+	PacketAskMap ask;
+	ask.send(*_socket, _server, _serverPort);
+	//attente de la réception
 }
 
 bool Client::isAlive()
@@ -69,7 +80,7 @@ void Client::update()
 				case NETWORK_STOP:
 					if(current != 0x00)
 					{
-						current->process(_scene);
+						current->process(_scene, *_socket, _server, _serverPort);
 						delete current;
 					}
 				break;

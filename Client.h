@@ -12,6 +12,7 @@
 #include "Const.h"
 #include "Packet.h"
 #include "SceneGame.h"
+#include "PacketAskMap.h"
 
 
 class Client
@@ -24,6 +25,7 @@ private:
 	SceneGame* _scene;
 public:
 	Client(SceneGame *scene, sf::IpAddress server);
+	void prepare();
 	void update();
 	bool isAlive();
 	~Client();

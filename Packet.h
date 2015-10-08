@@ -21,7 +21,7 @@ public:
 	void addData(int data);
 	void send(sf::UdpSocket &socket, sf::IpAddress distant, const unsigned short port);
 	virtual void prepare(SceneGame* scene) = 0;
-	virtual void process(SceneGame *scene) = 0;
+	virtual void process(SceneGame *scene, sf::UdpSocket &socket, sf::IpAddress &distant, unsigned short port) = 0;
 };
 
 #endif

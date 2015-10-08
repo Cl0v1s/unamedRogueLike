@@ -127,6 +127,8 @@
     <ClCompile Include="EntityLiving.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="PacketAskMap.cpp" />
+    <ClCompile Include="PacketSendMap.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="Server.cpp" />
@@ -138,6 +140,8 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityLiving.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="PacketAskMap.h" />
+    <ClInclude Include="PacketSendMap.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="Server.h" />

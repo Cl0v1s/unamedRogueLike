@@ -10,7 +10,7 @@ class PacketSendMap : public Packet
 public:
     PacketSendMap();
     void prepare(SceneGame* scene);
-    void process(SceneGame* scene);
+    void process(SceneGame* scene, sf::UdpSocket &socket, sf::IpAddress &distant, unsigned short port);
 };
 
 #endif

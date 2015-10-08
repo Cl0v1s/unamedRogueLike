@@ -76,7 +76,7 @@ void Server::manageClient(sf::IpAddress client)
 	while(!done)
 	{
 		//reception des données brutes
-		socket.receive(buffer, sizeof(buffer), received, distant, distant_port);
+		socket.receive(data, sizeof(data), received, distant, distant_port);
 		if(distant != client && distant != sf::IpAddress("127.0.0.1"))
 		{
 			assert("Paquet recu d'une source illegale.");
@@ -93,7 +93,7 @@ void Server::manageClient(sf::IpAddress client)
 				case NETWORK_STOP:
 					if(current != 0x00)
 					{
-						current->process(_scene);
+						current->process(_scene, socket, client, NETWORK_PORT + 1);
 						delete current;
 					}
 					break;

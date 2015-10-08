@@ -34,6 +34,7 @@
 #define NETWORK_NEXT 0x02
 #define NETWORK_SENDPORT 0x03
 #define NETWORK_SENDMAP 0x04
+#define NETWORK_ASKMAP 0x05
 
 
 #endif
