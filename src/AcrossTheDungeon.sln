@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AcrossTheDungeon", "AcrossTheDungeon.vcxproj", "{B55E92CE-215B-4398-A2BC-F2364403B4DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug-client|Win32 = Debug-client|Win32
+		Debug-server|Win32 = Debug-server|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B55E92CE-215B-4398-A2BC-F2364403B4DC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B55E92CE-215B-4398-A2BC-F2364403B4DC}.Debug|Win32.Build.0 = Debug|Win32
+		{B55E92CE-215B-4398-A2BC-F2364403B4DC}.Debug-client|Win32.ActiveCfg = Debug-client|Win32
+		{B55E92CE-215B-4398-A2BC-F2364403B4DC}.Debug-client|Win32.Build.0 = Debug-client|Win32
+		{B55E92CE-215B-4398-A2BC-F2364403B4DC}.Debug-server|Win32.ActiveCfg = Debug-server|Win32
+		{B55E92CE-215B-4398-A2BC-F2364403B4DC}.Debug-server|Win32.Build.0 = Debug-server|Win32
+		{B55E92CE-215B-4398-A2BC-F2364403B4DC}.Release|Win32.ActiveCfg = Release|Win32
+		{B55E92CE-215B-4398-A2BC-F2364403B4DC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
