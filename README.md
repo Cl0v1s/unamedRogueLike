@@ -22,6 +22,11 @@ Ce jeu doit permettre l'usage du multijjoueur, il est donc prioritaire de défin
 
 ## 3. Lexique
 
+* Joueur 1: joueur principal/ joueur du mode solo. En multijoueur, il fait tourner le serveur sur sa machine.
+* Joueur 2: joueur secondaire. Il n'est présent qu'en multi et se connecte au serveur du joueur 1, il est donc client de ce dernier.
+* Créature: Nom donné aux entités que le joueur 1 doit faire survivre dans le donjon.
+* Donjon: Environnement hostile, généré de manière aléatoire dans lequel éveoluent les créatures gérées par le joueur 1.
+
 ## 4.Gameplay
 
 ### 4.1 Objectif principal des joueurs
