@@ -9,7 +9,7 @@ public:
 		//on répertorie ici la liste de tout les types d'entités
 	};
 
-private:
+protected:
 	float _x;
 	float _y;
 	Entity::Type _type;
@@ -43,7 +43,7 @@ public:
 	/// <summary>
 	/// Permet l'interraction des autres entités avec celle-ci
 	/// </summary>
-	virtual void interact() = 0;
+	virtual void interact(Entity *other) = 0;
 
 	/// <summary>
 	/// Retourne le type del'entité

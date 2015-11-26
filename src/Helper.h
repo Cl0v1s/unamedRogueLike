@@ -4,6 +4,8 @@
 #define DEVICE_WIDTH
 #define DEVICE_HEIGHT
 
+#define DELTA 0.03
+
 //Définition des macros relatives au donjon
 #define DUNGEON_WIDTH_MAX 100 
 #define DUNGEON_HEIGHT_MAX 100
